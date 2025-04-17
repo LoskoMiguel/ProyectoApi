@@ -9,7 +9,7 @@ async def mostrar_productos():
     cursor = connection.cursor()
 
     try:
-        cursor.execute("SELECT name_product FROM products")
+        cursor.execute("SELECT name_product, price FROM products")
         resultados = cursor.fetchall()
         
         nombres = [fila[0] for fila in resultados]

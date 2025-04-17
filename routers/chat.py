@@ -76,7 +76,7 @@ def generate_response(user_message):
     agent_executor = create_sql_agent(
         llm=llm,
         toolkit=toolkit,
-        verbose=True,
+        verbose=False,
         agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
         handle_parsing_errors=True,
         memory=memory 
