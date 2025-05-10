@@ -5,7 +5,7 @@ from fastapi import HTTPException, Depends, Request
 SECRET_KEY = "clave123"
 ALGORITHM = "HS256"
 
-def create_access_token(username: str, role: str, expires_in: int = 60):
+def create_access_token(username: str, role: str, expires_in: int = 200):
     expiration = datetime.utcnow() + timedelta(minutes=expires_in)
     payload = {
         "username": username,

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Request
 from models.user import Registrar
 from db.connection import get_db_connection
 from core.security import verify_token_and_role
+import bcrypt
 
 router = APIRouter()
 
@@ -30,8 +31,9 @@ async def registrar_usuario(
         if user:
             raise HTTPException(status_code=401, detail="El usuario ya existe")
 
+        contrasena_hash = bcrypt.hashpw(registrar.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         cursor.execute("INSERT INTO users (name, username, password, rol) VALUES (%s, %s, %s, %s)", 
-                       (registrar.name, registrar.username, registrar.password, registrar.rol))
+                       (registrar.name, registrar.username, contrasena_hash, registrar.rol))
         connection.commit()
 
         return {"Mensaje": "Usuario Creado Correctamente"}

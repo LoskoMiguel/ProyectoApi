@@ -9,3 +9,6 @@ class SaleInput(BaseModel):
     customer_name: str
     payment_method: str
     products: List[ProductInput]
+
+class SalePlusProducts(BaseModel):
+    products : List[ProductInput]

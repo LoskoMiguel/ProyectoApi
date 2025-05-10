@@ -10,6 +10,7 @@ from routers.admin.productos.editar_producto import router as editar_producto_ro
 from routers.mostrar_productos import router as mostrar_productos_router
 from routers.admin.productos.eliminar_producto import router as eliminar_producto_router
 from routers.registrar_venta import router as registrar_venta_router
+from routers.sumar_productos import router as sumar_productos_router
 from routers.chat import router as chat_router
 
 app = FastAPI()
@@ -29,9 +30,8 @@ app.include_router(editar_producto_router, prefix="/admin/productos")
 app.include_router(mostrar_productos_router, prefix="/productos")
 app.include_router(eliminar_producto_router, prefix="/admin/productos")
 app.include_router(registrar_venta_router, prefix="/ventas")
+app.include_router(sumar_productos_router, prefix="/ventas")
 app.include_router(chat_router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT")))
-
-# https://proyecto-api-iota.vercel.app/docs

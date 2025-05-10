@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from models.sale_models import SaleInput
 from db.connection import get_db_connection
+from datetime import datetime
 
 router = APIRouter()
 
@@ -21,7 +22,7 @@ async def register_sale(sale: SaleInput):
             if not product_data:
                 raise HTTPException(status_code=404, detail=f"El Producto {product.product_name} No Fue Encontrado")
 
-            unit_price = float(product_data[0])
+            unit_price = int(product_data[0])
             stock = product_data[1]
 
             if product.quantity > stock:
@@ -38,8 +39,12 @@ async def register_sale(sale: SaleInput):
                 "subtotal": subtotal
             })
 
-        cursor.execute("INSERT INTO sales_details (customer_name, total_items, total_price, payment_method) VALUES (%s, %s, %s, %s) RETURNING id", (sale.customer_name, total_items, total_price, sale.payment_method))
+        ahora = datetime.now()
+        dia_hoy = ahora.strftime("%Y-%m-%d")
+        hora_actual = ahora.strftime("%I:%M %p")
 
+        cursor.execute("INSERT INTO sales_details (customer_name, total_items, total_price, payment_method, sale_day, sale_time) VALUES (%s, %s, %s, %s, %s, %s) RETURNING id", (sale.customer_name, total_items, total_price, sale.payment_method, dia_hoy, hora_actual))
+    
         sale_id = cursor.fetchone()[0]
 
         for product in products_data:
@@ -48,7 +53,7 @@ async def register_sale(sale: SaleInput):
 
             cursor.execute('UPDATE products SET stock = stock - %s WHERE name_product = %s', (product["quantity"], product["product_name"]))
         connection.commit()
-        return {"message": "Venta Registrada Exitosamente", "Precio Total": total_price}
+        return {"message": f"Venta Registrada Exitosamente Precio Total {total_price}"}
 
     except Exception as e:
         connection.rollback()

@@ -9,14 +9,17 @@ async def mostrar_productos():
     cursor = connection.cursor()
 
     try:
-        cursor.execute("SELECT name_product, price FROM products")
+        cursor.execute("SELECT name_product, price, stock, description FROM products")
         resultados = cursor.fetchall()
         
         nombres = [fila[0] for fila in resultados]
-        return {"nombres": nombres}
+        precios = [fila[1] for fila in resultados]
+        descripciones = [fila[3] for fila in resultados]
+        total = [fila[2] for fila in resultados]
+        return {"nombres": nombres, "precios": precios, "descripciones": descripciones, "total": total}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al obtener nombres: {e}")
+        raise HTTPException(status_code=500, detail=f"Error al obtener productos: {e}")
     finally:
         cursor.close()
         connection.close()
